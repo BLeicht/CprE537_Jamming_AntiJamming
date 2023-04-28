@@ -1,26 +1,9 @@
 #include <iostream>
 
-#include "hlib/hashlibpp.h"
+#include "md5.h"
 
-int main() {
-	hashwrapper *myWrapper = new md5wrapper();
+int main(int argc, char *argv[]) {
+	std::cout << "md5 of \"grape\": " << md5("grape") << std::endl;
+	return 0;
 
-	try {
-		myWrapper -> test();
-	} 
-	catch(hlException &e) {
-		//lit
-	}
-
-	try {
-		std::cout << myWrapper->getHashFromString("Hello world") << std::endl;
-	        std::cout << myWrapper->getHashFromFile("/etc/motd") << std::endl;	
-	} 
-	catch(hlException &e) {
-		//lit
-	}	
-
-
-	delete myWrapper;
-	myWrapper = NULL;
 }
