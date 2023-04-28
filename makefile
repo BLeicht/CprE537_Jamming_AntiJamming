@@ -14,18 +14,18 @@ GCC = $(COMPILER) $(COPTIONS)
 all: MAIN
 
 # Header files
-HEADER =	md5.h
+HEADER =	./src/md5.h
 
 
 
-MAIN: main.o md5.o
-	$(GCC) -o main main.o md5.o
+MAIN: ./src/main.o ./src/md5.o
+	$(GCC) -o main ./src/main.o ./src/md5.o
 	
-main.o: main.cpp md5.h
-	$(GCC) -c main.cpp
+main.o: ./src/main.cpp ./src/md5.h
+	$(GCC) -c ./src/main.cpp
 
-md5.o:	md5.cpp md5.h
-	$(GCC) -c md5.cpp
+md5.o:	./src/md5.cpp ./src/md5.h
+	$(GCC) -c ./src/md5.cpp
 
 clean: 
-	rm *.o
+	rm ./src/*.o
