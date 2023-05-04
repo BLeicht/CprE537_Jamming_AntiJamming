@@ -8,39 +8,24 @@ COPTIONS = -ansi -Wall -Wextra -Ihlib/
 GCC = $(COMPILER) $(COPTIONS)
 
 # Specifies directories make should search for files
-VPATH = hlib
+#VPATH
 
 # Main target
-all: MD5 MAIN
+all: MAIN
 
 # Header files
-HEADER =	hlib/hashlibpp.h \
-		hlib/hl_exception.h \
-		hlib/hl_hashwrapper.h \
-		hlib/hl_md5.h \
-		hlib/hl_md5wrapper.h \
-		hlib/hl_types.h \
-		hlib/hl_wrapperfactory.h
+HEADER =	./src/md5.h
 
 
 
-MAIN: main.o hl_md5.o hl_md5wrapper.o hl_wrapperfactory.o
-	$(GCC) -o main main.o hl_md5.o hl_md5wrapper.o hl_wrapperfactory.o
+MAIN: ./src/main.o ./src/md5.o
+	$(GCC) -o main ./src/main.o ./src/md5.o
+	
+main.o: ./src/main.cpp ./src/md5.h
+	$(GCC) -c ./src/main.cpp
 
-main.o: main.cpp hlib/hashlibpp.h
-	$(GCC) -c main.cpp
-
-MD5:	hl_md5.o hl_md5wrapper.o hl_wrapperfactory.o
-	$(GCC) -c hlib/hl_md5.cpp
-
-hl_md5.o: hl_md5.cpp hl_md5.h
-	$(GCC) -c hlib/hl_md5.cpp
-
-hl_md5wrapper.o: hl_md5wrapper.cpp hl_md5wrapper.h
-	$(GCC) -c hlib/hl_md5wrapper.cpp
-
-hl_wrapperfactory.o: hl_wrapperfactory.cpp hl_wrapperfactory.h hashlibpp.h
-	$(GCC) -c hlib/hl_wrapperfactory.cpp
+md5.o:	./src/md5.cpp ./src/md5.h
+	$(GCC) -c ./src/md5.cpp
 
 clean: 
-	rm *.o
+	rm ./src/*.o
