@@ -1,16 +1,16 @@
-#include <iosteam>
-using namespace std;
+#include <iostream>
+#include <cstring>
+#include <cstdint>
 
-class Packet {
-	public:
-		int uniqueID; // 8 bytes ?
-		
-		// originally 32 bytes. now 2 bytes. 
-		short int packetNum;
-		
-		char randData[512]; // 512 bytes ?
-		
+#include "packet.hpp"
+#include "md5.hpp"
 
-
-		int verifHash; // 16 bytes ?
+std::string HashPacket(struct packet * packet) {
+	std::string toVerify = std::to_string(packet->nodeID) + std::to_string(packet->packetNum);
+	for (int8_t i : packet->randomData) {
+		toVerify += std::to_string(i);
+	}
+	
+	toVerify = md5(toVerify);	
+	return toVerify;
 }
