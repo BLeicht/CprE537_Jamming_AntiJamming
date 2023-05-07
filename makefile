@@ -2,30 +2,29 @@
 COMPILER = g++
 
 # Global options for compiler
-COPTIONS = -ansi -Wall -Wextra -Ihlib/
+COPTIONS = -ansi -Wall -Wextra -I./src -std=gnu++11
 
-# Compiler :)
+# VPATH
+VPATH = ./src
+
+# Compiler
 GCC = $(COMPILER) $(COPTIONS)
-
-# Specifies directories make should search for files
-#VPATH
 
 # Main target
 all: MAIN
 
-# Header files
-HEADER =	./src/md5.h
 
-
-
-MAIN: ./src/main.o ./src/md5.o
-	$(GCC) -o main ./src/main.o ./src/md5.o
+MAIN: main.o md5.o packet.o 
+	$(GCC) -o main ./src/main.o ./src/md5.o ./src/packet.o
 	
-main.o: ./src/main.cpp ./src/md5.h
-	$(GCC) -c ./src/main.cpp
+main.o: main.cpp packet.hpp packet.cpp
+	$(GCC) -c ./src/main.cpp -o ./src/main.o
 
-md5.o:	./src/md5.cpp ./src/md5.h
-	$(GCC) -c ./src/md5.cpp
+md5.o: md5.cpp md5.hpp packet.hpp
+	$(GCC) -c ./src/md5.cpp -o ./src/md5.o
+
+packet.o: packet.cpp packet.hpp
+	$(GCC) -c ./src/packet.cpp -o ./src/packet.o
 
 clean: 
-	rm ./src/*.o
+	rm -r ./src/*.o

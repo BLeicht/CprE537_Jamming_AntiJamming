@@ -14,3 +14,4 @@ std::string HashPacket(struct packet * packet) {
 	toVerify = md5(toVerify);	
 	return toVerify;
 }
+
