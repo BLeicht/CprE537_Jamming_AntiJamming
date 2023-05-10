@@ -19,6 +19,7 @@
 
 static char server_buffer[128];
 
+void *__dso_handle __attribute__((weak)) = NULL;
 
 static int _begin_handler(int argc, char ** argv);
 static int _server_handler(int argc, char ** argv);

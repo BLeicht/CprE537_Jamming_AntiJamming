@@ -20,6 +20,6 @@ FEATURES_REQUIRED += cpp
 
 CFLAGS += -DSERVER_PORT=$(SERVER_PORT)
 CFLAGS += -DSERVER_ADDR=\"$(SERVER_ADDR)\"
-CFLAGS += -fno-use-cxa-atexit
+#CFLAGS += -fno-use-cxa-atexit
 
 include $(RIOTBASE)/Makefile.include
