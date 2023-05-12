@@ -38,8 +38,9 @@ static char jam_stack[_STACKSIZE];
 static size_t _parse_addr(uint8_t *out, size_t out_len, const char *in);
 static int send(int iface, le_uint16_t dst_pan, uint8_t *dst_addr,
                 size_t dst_len, char *data, int quiet);
+static kernel_pid_t _jam_pid;
 int jamFlag = true;
-int jamDuration = 5;
+int jamDuration = 10;
 
 
 
@@ -184,27 +185,61 @@ int txtsnd(int argc, char **argv)
 }
 void *_jam_thread(void *arg)
 {
-    (void)arg;
-    printf("Starting Jamming");
+    (void)arg;    
     le_uint16_t pan = { 0 };
     _parse_addr((uint8_t *)&pan, sizeof(pan), "0xffff");
     uint8_t addr[_MAX_ADDR_LEN] = {0xff,0xff,0xff,0xff,0xff,0xff,0xff,0xff};
     while (jamFlag) 
     {
         send(0, pan, addr, 8, "GARBAGE",true); 
+    }   
+    return 0;
+}
+int jamStart(int argc, char **argv)
+{
+    (void)argv;
+    (void)argc;
+    quietGlobal = true;    
+    printf("Hello I am jamming until told to stop\n");
+    jamFlag  = true;
+    _jam_pid = thread_create(jam_stack, sizeof(jam_stack), THREAD_PRIORITY_MAIN + 1,
+                              THREAD_CREATE_STACKTEST, _jam_thread, NULL,
+                              "jam_thread");
+    if (_jam_pid <= KERNEL_PID_UNDEF) {
+        puts("Creation of receiver thread failed");
+        return 1;
     }
-    printf("Jamming Complete!\n");
+    return 0;
+}
+int jamStop(int argc, char **argv)
+{     
+    // todo: add countdown
+    // todo: add stop and start option
+    (void)argv;
+    (void)argc;
+    jamFlag = false;// turn off jamming traffic  
+    printf("!!!!!!!!!!Jamming Complete!!!!!!!!!!\n");
+    xtimer_sleep(1);// Wait 1 second
+    thread_kill_zombie(_jam_pid);
     return 0;
 }
 int jam(int argc, char **argv)
 {
-    (void)argc;
-    (void)argv;
-    quietGlobal = true;
-    jamDuration = 1;
+    if(argc != 2)
+    {
+        (void)argv;
+    }
+    else
+    {        
+       jamDuration  = atoi(argv[1]);
+       printf("Jam duration is now set to: %d minutes\n\n", jamDuration);
+    }
+    
+    
+    quietGlobal = true;    
     printf("Hello I am jamming for: %d minutes!\n",jamDuration );
     jamFlag  = true;
-     kernel_pid_t _jam_pid = thread_create(jam_stack, sizeof(jam_stack), THREAD_PRIORITY_MAIN + 1,
+    _jam_pid = thread_create(jam_stack, sizeof(jam_stack), THREAD_PRIORITY_MAIN + 1,
                               THREAD_CREATE_STACKTEST, _jam_thread, NULL,
                               "jam_thread");
     if (_jam_pid <= KERNEL_PID_UNDEF) {
@@ -213,7 +248,10 @@ int jam(int argc, char **argv)
     }
     printf("Waiting for jamming to complete\n");
     xtimer_sleep(jamDuration*60);// Wait jamDuration minutes
+    // todo: add countdown
+    // todo: add stop and start option
     jamFlag = false;// turn off jamming traffic    
+    printf("!!!!!!!!!!Jamming Complete!!!!!!!!!!\n");
     xtimer_sleep(1);// Wait 1 second
     thread_kill_zombie(_jam_pid);
     return 0;

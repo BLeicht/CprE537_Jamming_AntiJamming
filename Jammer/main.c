@@ -42,7 +42,9 @@ int quietGlobal = false;
 static const shell_command_t shell_commands[] = {
     { "ifconfig", "Configure netdev", ifconfig },
     { "txtsnd", "Send IEEE 802.15.4 packet", txtsnd },
-    { "jam", "Start jamming at set channel", jam },
+    { "jam", "Start jamming at set channel for x minutes", jam },
+    { "jamStart", "Start Jamming untill told to stop", jamStart },
+    { "jamStop", "Stop Jamming", jamStop },
     { NULL, NULL, NULL }
 };
 

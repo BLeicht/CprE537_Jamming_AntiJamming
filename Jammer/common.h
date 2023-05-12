@@ -43,6 +43,8 @@ int ifconfig(int argc, char **argv);
 int txtsnd(int argc, char **argv);
 void print_addr(uint8_t *addr, size_t addr_len);
 int jam(int argc, char **argv);
+int jamStart(int argc, char **argv);
+int jamStop(int argc, char **argv);
  
 /**
  * @}
